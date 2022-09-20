@@ -4,26 +4,26 @@
     <title>Page Title</title>
   </head>
   <body>
-    <div class="parent"></div>
-
+    <select name="" id="sort">
+      <option value="EMP">select All sorted</option>
+      <option value="ASC" style="background-color: yellow">ASC</option>
+      <option value="DEC" style="background-color: green">DEC</option>
+    </select>
     <table>
       <thead>
         <tr>
           <th>Name</th>
-          <th>Curr price</th>
-          <th>market cap</th>
-          <th>24High</th>
-          <th>low24</th>
+          <th>curr_price</th>
+          <th>market_cap</th>
         </tr>
       </thead>
       <tbody>
-        <!-- here i will append the dom -->
+        <!-- here it your append -->
       </tbody>
     </table>
   </body>
-
   <script>
-    crypto_Data = [
+    let crypto_data = [
       {
         id: "bitcoin",
         name: "Bitcoin",
@@ -327,48 +327,49 @@
     ];
 
     let tbody = document.querySelector("tbody");
+    let sortArr = document.getElementById("sort");
 
-    crypto_Data.forEach(function (ele) {
-      let tr = document.createElement("tr");
+    function renderDOM(data) {
+      tbody.innerHTML = null;
 
-      let name = document.createElement("td");
-      name.innerText = ele.name;
+      data.forEach(function (ele) {
+        let tr = document.createElement("tr");
+        tbody.append(tr);
 
-      let image = document.createElement("img");
-      image.innerText = ele.image;
+        let td1 = document.createElement("td");
+        td1.innerText = ele.name;
 
-      let curr_price = document.createElement("td");
-      curr_price.innerText = ele.curr_price;
+        let td2 = document.createElement("td");
+        td2.innerText = ele.curr_price;
 
-      let market_cap = document.createElement("td");
-      market_cap.innerText = ele.market_cap;
+        let td3 = document.createElement("td");
+        td3.innerText = ele.market_cap;
 
-      let high24 = document.createElement("td");
-      high24.innerText = ele.high24;
-
-      let low24 = document.createElement("td");
-      low24.innerText = ele.low24;
-
-      let Favourates = document.createElement("td");
-      Favourates.innerText = "Add to favourite";
-
-      Favourates.addEventListener("click", function () {
-        let LSfavourates = JSON.parse(
-          localStorage.getItem("crypto-fav", JSON.stringify(LSfavourates))
-        );
-        if (LSfavourates === null) {
-          LSfavourates = [];
-        }
-        LSfavourates.push(ele);
-        localStorage.setItem("crypto-fav", JSON.stringify(LSfavourates));
+        tr.append(td1, td2, td3);
+        tbody.append(tr);
       });
-      tr.append(Favourates, name, image, curr_price, market_cap, high24, low24);
-      tbody.append(tr);
+    }
+    renderDOM(crypto_data);
+    let original = [...crypto_data];
+    sortArr.addEventListener("change", function () {
+      console.log(sortArr.value, "sor");
+      if (sortArr.value == "EMP") {
+        return renderDOM(original);
+      } else {
+        let cryptos = crypto_data.sort(function (ele) {
+          return ele;
+        });
+      }
+      let sorted = crypto_data.sort(function (el1, el2) {
+        if (sortArr.value === "ASC") {
+          return el1.curr_price - el2.curr_price;
+        } else if (sortArr.value === "DEC") {
+          return el2.curr_price - el1.curr_price;
+        }
 
-      //   tr.addEventListener("click", function () {
-      //     localStorage.setItem(" crypto_Data", JSON.stringify(ele));
-      //     window.location.href = "we2.html";
-      //   });
+        //asc order
+      });
+      renderDOM(sorted);
     });
   </script>
 </html>
