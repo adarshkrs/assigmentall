@@ -11,7 +11,6 @@
         <tr>
           <th>Name</th>
           <th>Curr price</th>
-          <th>market cap</th>
           <th>24High</th>
           <th>low24</th>
         </tr>
@@ -20,10 +19,11 @@
         <!-- here i will append the dom -->
       </tbody>
     </table>
+    <div id="pagination"></div>
   </body>
 
   <script>
-    crypto_Data = [
+   let crypto_Data = [
       {
         id: "bitcoin",
         name: "Bitcoin",
@@ -327,35 +327,50 @@
     ];
 
     let tbody = document.querySelector("tbody");
+    let pagination=document.getElementById("pagination");
+        let crypto_per_page=5;
+        let curr_page=1;
+         let pages=Math.ceil(crypto_Data.length/crypto_per_page);
 
-    crypto_Data.forEach(function (ele) {
-      let tr = document.createElement("tr");
+        function renderDOM(data){
+          tbody.innerHTML=null;
+           data.forEach(function(ele){
+            let tr=document.createElement("tr");
+            tbody.append(tr);
 
-      let name = document.createElement("td");
-      name.innerText = ele.name;
+            let td1= document.createElement("td");
+            td1.innerText=ele.name;
 
-      let image = document.createElement("img");
-      image.innerText = ele.image;
+            let td2= document.createElement("td");
+            td2.innerText=ele.curr_price;
 
-      let curr_price = document.createElement("td");
-      curr_price.innerText = ele.curr_price;
+            let td3=document.createElement("td");
+            td3.innerText=ele.high24;
 
-      let market_cap = document.createElement("td");
-      market_cap.innerText = ele.market_cap;
+            let td4=document.createElement("td");
+            td4.innerText=ele.low24;
 
-      let high24 = document.createElement("td");
-      high24.innerText = ele.high24;
+            tr.append(td1, td2, td3,td4);
+           })
+        }
+        renderDOM(crypto_Data.slice(0,  crypto_per_page));
+     
+        for(let i=1;i<=pages;i++){
+          let button= document.createElement("button");
+          button.innerText=i
+         pagination.append(button);
+         button.addEventListener("click", function (){
+          let pagedArray=crypto_Data.slice((i-1)*crypto_per_page  ,i * crypto_per_page
 
-      let low24 = document.createElement("td");
-      low24.innerText = ele.low24;
 
-      tr.append(name, image, curr_price, market_cap, high24, low24);
-      tbody.append(tr);
-      tr.addEventListener("click", function () {
-        localStorage.setItem(" crypto_Data", JSON.stringify(ele));
-        window.location.href = "we2.html";
-      });
-    });
+          )
+
+          renderDOM(pagedArray)
+         })
+                 
+        }
+
+   
   </script>
 </html>
 
